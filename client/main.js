@@ -113,7 +113,8 @@ Template.tabular.onRendered(function () {
       }
 
       // Update sort
-      template.tabular.sort.set(getMongoSort(data.order, options.columns));
+      const deterministic = template.tabular.tableDef.ensureDeterministicSort ?? false;
+      template.tabular.sort.set(getMongoSort(data.order, options.columns, deterministic));
 
       // Update pubSelector
       let pubSelector = template.tabular.selector;
@@ -476,11 +477,10 @@ Template.tabular.onRendered(function () {
 
     if (template.tabular.blazeViews) {
       //console.log(`Removing ${template.blazeViews.length}`);
-      template.tabular.blazeViews.forEach(view => {
+      template.tabular.blazeViews.forEach((view) => {
         try {
           Blaze.remove(view);
-        }
-        catch(err) {
+        } catch (err) {
           console.error(err);
         }
       });
@@ -532,11 +532,10 @@ Template.tabular.onDestroyed(function () {
 
   if (this.tabular?.blazeViews) {
     //console.log(`Removing ${this.blazeViews.length}`);
-    this.tabular.blazeViews.forEach(view => {
+    this.tabular.blazeViews.forEach((view) => {
       try {
         Blaze.remove(view);
-      }
-      catch(err) {
+      } catch (err) {
         console.error(err);
       }
     });
